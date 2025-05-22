@@ -88,7 +88,8 @@ $posts = $blogModel->getAllPosts(10,0);
                 <p class="text-sm text-gray-600 mt-2 line-clamp-2"><?php echo htmlspecialchars($post['description']); ?>
                 </p>
                 <div class="mt-4 flex justify-between">
-                    <a href="edit-post.php?id=<?php echo $post['id']; ?>" class="text-indigo-600 hover:text-indigo-900">
+                    <a href="#" onclick="event.preventDefault(); openEditModal(<?php echo $post['id']; ?>);"
+                        class="text-indigo-600 hover:text-indigo-900">
                         <i class="material-icons">edit</i>
                     </a>
                     <a href="#" onclick="event.preventDefault(); deletePost(<?php echo $post['id']; ?>)"
@@ -131,7 +132,8 @@ $posts = $blogModel->getAllPosts(10,0);
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap hidden-on-mobile" style="width: 3%;">
-                            <a href="edit-post.php?id=<?= $post['id'] ?>" class="text-indigo-600 hover:text-indigo-900">
+                            <a href="#" onclick="event.preventDefault(); openEditModal(<?php echo $post['id']; ?>);"
+                                class="text-indigo-600 hover:text-indigo-900">
                                 <i class="material-icons">edit</i>
                             </a>
                         </td>
@@ -147,6 +149,61 @@ $posts = $blogModel->getAllPosts(10,0);
             </table>
         </div>
     </div>
+
+
+    <!-- Edit Modal -->
+
+    <div id="edit-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-80">
+
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-bold mb-4">Edit Post</h2>
+                <a href="#" onClick="closeEditModal()" class="text-gray-600 hover:text-gray-800 flex items-center">
+                    <i class="material-icons mr-2">close</i>
+
+                </a>
+            </div>
+
+
+            <form id="edit-form" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="post_id" id="post-id">
+                <div class="mb-4">
+                    <label for="edit-title" class="block text-sm font-medium text-gray-700">Title</label>
+                    <input type="text" id="edit-title" name="title" placeholder="Enter your title"
+                        class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                </div>
+                <div class="mb-4">
+                    <label for="edit-description" class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea id="edit-description" name="description" rows="4" placeholder="Enter your description"
+                        class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="edit-image" class="block text-sm font-medium text-gray-700">Featured Image</label>
+                    <div
+                        class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                        <div class="space-y-1 text-center">
+                            <span class="material-icons mx-auto h-15 w-15 text-primary">cloud_upload</span>
+                            <div class="flex text-sm text-gray-600">
+                                <label for="edit-image-upload"
+                                    class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:bg-gray-50 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                    <span>Upload a photo</span>
+                                    <input id="edit-image-upload" name="image" type="file" accept="image/*"
+                                        class="sr-only">
+                                </label>
+                                <p class="pl-1">or paste URL</p>
+                            </div>
+                            <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit"
+                    class="w-full bg-primary text-white px-4 py-2 rounded-md hover:bg-dark-primary transition duration-300">
+                    Submit
+                </button>
+            </form>
+        </div>
+    </div>
+
 
     <!-- JavaScript for AJAX Deletion -->
     <script>
@@ -171,6 +228,60 @@ $posts = $blogModel->getAllPosts(10,0);
                 });
         }
     }
+
+    function openEditModal(postId) {
+        // Fetch post data via AJAX
+        fetch(`edit-post.php?id=${postId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const post = data.post;
+                    document.getElementById('edit-title').value = post.title;
+                    document.getElementById('edit-description').value = post.description;
+                    document.getElementById('post-id').value = postId;
+                    document.getElementById('edit-modal').classList.remove('hidden');
+                } else {
+                    alert('Failed to load post data.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An unexpected error occurred.');
+            });
+    }
+
+    function closeEditModal() {
+        document.getElementById('edit-modal').classList.add('hidden');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const editForm = document.getElementById('edit-form');
+        editForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(editForm);
+            const postId = formData.get('post_id');
+
+            fetch(`update-post.php`, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Post updated successfully.');
+                        document.getElementById('edit-modal').classList.add('hidden');
+                        location.reload();
+                    } else {
+                        alert('Failed to update post: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An unexpected error occurred.');
+                });
+        });
+    });
     </script>
 </body>
 
