@@ -1,5 +1,4 @@
 <?php
-
 require '../../vendor/autoload.php';
 
 use LH\Helpers\ConstantHelper;
@@ -9,22 +8,24 @@ ConstantHelper::initialize();
 
 session_start();
 
-if (isset($_POST['login'])) {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    if ($username === 'lemon' && $password === 'lemon') {
-        $_SESSION['authenticated'] = true;
-        header('Location: dashboard.php');
-        exit;
-    } else {
-        $error = 'Invalid credentials';
-    }
-}
-
+// Check if the user is already authenticated
 if (isset($_SESSION['authenticated'])) {
-    header('Location: dashboard.php');
-    exit;
+    // User is already logged in
+    $error = 'You are already logged in.';
+} else {
+    // Handle login submission
+    if (isset($_POST['login'])) {
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+
+        if ($username === 'lemon' && $password === 'lemon') {
+            $_SESSION['authenticated'] = true;
+            header('Location: dashboard.php');
+            exit;
+        } else {
+            $error = 'Invalid credentials';
+        }
+    }
 }
 ?>
 
@@ -48,17 +49,23 @@ if (isset($_SESSION['authenticated'])) {
             <div class="text-center flex justify-center">
                 <a href="<?= BASE_URL ?>" class="text-xl font-bold text-gray-800">
                     <?php
-            $logoPath = ImageHelper::getImagePath('logo.png');
-            if ($logoPath !== null) {
-                echo "<img src='$logoPath' alt='Logo'>";
-            } else {
-                echo "<span class='text-red-500'>Logo not found</span>";
-            }
-            ?>
+                    $logoPath = ImageHelper::getImagePath('logo.png');
+                    if ($logoPath !== null) {
+                        echo "<img src='$logoPath' alt='Logo'>";
+                    } else {
+                        echo "<span class='text-red-500'>Logo not found</span>";
+                    }
+                    ?>
                 </a>
-
             </div>
 
+            <?php if (isset($error)): ?>
+            <!-- Display error message -->
+            <div class="text-center text-red-500">
+                <?= htmlspecialchars($error) ?>
+            </div>
+            <?php endif; ?>
+            <!-- Show login form -->
             <form action="" method="POST" class="mt-8 space-y-6">
                 <input type="hidden" name="csrf_token" value="your_csrf_token_here">
 
@@ -89,7 +96,6 @@ if (isset($_SESSION['authenticated'])) {
                     </button>
                 </div>
             </form>
-
 
         </div>
     </div>

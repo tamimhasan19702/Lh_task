@@ -17,10 +17,16 @@ use LH\Helpers\ImageHelper;
             }
             ?>
         </a>
-        <?php if (strpos($_SERVER['REQUEST_URI'], 'admin/login.php') === false) { ?>
+        <?php if (!isset($_SESSION['authenticated'])) { ?>
         <a href="<?= BASE_URL ?>admin/login.php"
             class="bg-primary text-white rounded-md px-4 py-2 font-montserrat hover:bg-primary transition duration-300">
             Admin panel
+        </a>
+        <?php } else {?>
+
+        <a href="<?= BASE_URL ?>admin/logout.php"
+            class="bg-primary text-white rounded-md px-4 py-2 font-montserrat hover:bg-primary transition duration-300">
+            Logout
         </a>
         <?php } ?>
     </div>

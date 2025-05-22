@@ -1,4 +1,12 @@
 <?php
+
+require '../../vendor/autoload.php';
+
+use LH\Helpers\ConstantHelper;
+use LH\Helpers\ImageHelper;
+
+ConstantHelper::initialize();
+
 session_start();
 
 if (!isset($_SESSION['authenticated'])) {
@@ -25,12 +33,7 @@ $posts = $blogModel->getAllPosts(10, 0); // Fetch 10 posts
 </head>
 
 <body class="bg-gray-100">
-    <nav class="bg-white shadow">
-        <div class="container mx-auto flex justify-between items-center px-6 py-4">
-            <a href="#" class="text-xl font-bold text-gray-800">Admin Panel</a>
-            <a href="logout.php" class="text-gray-600 hover:text-gray-800">Logout</a>
-        </div>
-    </nav>
+    <?php include '../includes/header.php'; ?>
 
     <div class="container mx-auto px-6 py-8">
         <h1 class="text-2xl font-bold mb-4">Blog Posts</h1>
