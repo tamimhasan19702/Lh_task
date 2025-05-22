@@ -1,16 +1,66 @@
 <?php
+require_once 'includes/db.php'; // Updated path
 
-$page = $_GET['page'] ?? 'home';
+use LH\Models\Blog;
 
+$blogModel = new Blog();
 
+$postsPerPage = 5;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $postsPerPage;
 
-switch ($page) {
-  case 'home':
-    include 'home.php';
-    break;
-  case 'login':
-    include 'login.php';
-    break;
-  default:
-    include '404.php';
+$posts = $blogModel->getAllPosts($postsPerPage, $offset);
+$totalPosts = $blogModel->getTotalPosts(); // Use total posts for pagination
+
+$paginationLinks = '';
+$totalPages = ceil($totalPosts / $postsPerPage);
+
+for ($i = 1; $i <= $totalPages; $i++) {
+    $active = ($i === $page) ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-blue-500 hover:text-white';
+    $paginationLinks .= "<a href='?page=$i' class='px-4 py-2 rounded $active'>$i</a>";
 }
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog List</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss @2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+    <?php include 'includes/header.php'; ?>
+
+    <div class="container mx-auto px-6 py-8">
+        <h1 class="text-2xl font-bold mb-4">Blog Posts</h1>
+        <?php if (empty($posts)): ?>
+        <p class="text-gray-600">No blog posts found.</p>
+        <?php else: ?>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <?php foreach ($posts as $post): ?>
+            <div class="bg-white shadow rounded overflow-hidden">
+                <img src="img/<?php echo htmlspecialchars($post['image']); ?>"
+                    alt="<?php echo htmlspecialchars($post['title']); ?>" class="w-full h-48 object-cover">
+                <div class="p-4">
+                    <h2 class="text-xl font-bold mb-2"><a
+                            href="post.php?id=<?php echo $post['id']; ?>"><?php echo htmlspecialchars($post['title']); ?></a>
+                    </h2>
+                    <p class="text-gray-700 line-clamp-3"><?php echo htmlspecialchars($post['description']); ?></p>
+                    <a href="post.php?id=<?php echo $post['id']; ?>"
+                        class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Read
+                        More</a>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+        <div class="mt-8 flex justify-center">
+            <?php echo $paginationLinks; ?>
+        </div>
+    </div>
+</body>
+
+</html>
