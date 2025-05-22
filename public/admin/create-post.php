@@ -1,43 +1,55 @@
-// public/admin/create-post.php
 <?php
 session_start();
 
+// Check if user is authenticated
 if (!isset($_SESSION['authenticated'])) {
     header('Location: login.php');
     exit;
 }
 
-require_once '../includes/db.php';
-$blogModel = new LH\Models\Blog();
 
+require_once '../../vendor/autoload.php';
+
+
+use LH\Helpers\ConstantHelper;
+use LH\Models\Blog;
+
+// Define BASE_URL
+ConstantHelper::initialize();
+
+// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $title = $_POST['title'];
-    $description = $_POST['description'];
-    $image = null;
+    // Validate inputs
+    $title = $_POST['title'] ?? '';
+    $description = $_POST['description'] ?? '';
+    $image = $_FILES['image'] ?? [];
 
-    if (isset($_FILES['image']) && $_FILES['image']['tmp_name']) {
-        $uploadDir = '../img/';
-        $fileName = basename($_FILES['image']['name']);
-        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
-        $newFileName = uniqid() . '_' . time() . '.' . $extension;
-        $targetPath = $uploadDir . $newFileName;
+    // Save image if uploaded
+    $fileName = null;
+    if (!empty($image) && $image['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = __DIR__ . '/../../public/assets/images/uploads/';
 
-        if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png'])) {
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
-                $image = $newFileName;
-            } else {
-                die('Failed to upload image');
-            }
-        } else {
-            die('Invalid file type');
+        if (!file_exists($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
+        $fileName = uniqid() . '_' . basename($image['name']);
+        $filePath = $uploadDir . $fileName;
+
+        if (!move_uploaded_file($image['tmp_name'], $filePath)) {
+            die("Failed to upload image.");
         }
     }
 
-    if ($blogModel->createPost($title, $description, $image)) {
-        header('Location: dashboard.php');
+    // Create blog post
+    $blogModel = new Blog();
+    $result = $blogModel->createPost($title, $description, $fileName);
+
+    if ($result) {
+        header('Location: dashboard.php?success=true');
         exit;
     } else {
-        die('Failed to create post');
+        die("Failed to save post.");
     }
 }
 ?>
@@ -48,43 +60,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Post</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss @2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Create New Post</title>
+    <link href="../assets/css/output.css" rel="stylesheet">
+    <link href="../assets/css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat :wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons " rel="stylesheet">
 </head>
 
-<body class="bg-gray-100">
-    <nav class="bg-white shadow">
-        <div class="container mx-auto flex justify-between items-center px-6 py-4">
-            <a href="#" class="text-xl font-bold text-gray-800">Admin Panel</a>
-            <a href="logout.php" class="text-gray-600 hover:text-gray-800">Logout</a>
-        </div>
-    </nav>
+<body class="bg-gray-100 font-sans text-gray-800">
+
+    <?php include '../includes/header.php'; ?>
 
     <div class="container mx-auto px-6 py-8">
-        <h1 class="text-2xl font-bold mb-4">Create New Post</h1>
-        <form action="" method="POST" enctype="multipart/form-data"
-            class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <!-- Back to Dashboard -->
+        <a href="<?= BASE_URL ?>/admin/dashboard.php" class="text-gray-600 hover:text-gray-800 flex items-center mb-4">
+            <i class="material-icons mr-2">arrow_back</i> Back to dashboard
+        </a>
+
+        <h2 class="text-xl font-bold mb-4 mt-8">Create New Post</h2>
+
+        <!-- Form -->
+        <form method="POST" enctype="multipart/form-data" class="mt-4">
             <div class="mb-4">
-                <label for="title" class="block text-gray-700 text-sm font-bold mb-2">Title</label>
-                <input type="text" name="title" id="title"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+                <input type="text" id="title" name="title" placeholder="Enter your title"
+                    class="mt-1 p-4 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
             </div>
-            <div class="mb-6">
-                <label for="description" class="block text-gray-700 text-sm font-bold mb-2">Description</label>
-                <textarea name="description" id="description" rows="5"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+
+            <div class="mb-4">
+                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                <textarea id="description" name="description" rows="4" placeholder="Enter your description"
+                    class="mt-1 p-4 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
             </div>
-            <div class="mb-6">
-                <label for="image" class="block text-gray-700 text-sm font-bold mb-2">Image</label>
-                <input type="file" name="image" id="image"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Featured Image</label>
+                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                    <div class="space-y-1 text-center">
+                        <span class="material-icons mx-auto h-15 w-15 text-primary">cloud_upload</span>
+                        <div class="flex text-sm text-gray-600">
+                            <label for="image-upload"
+                                class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:bg-gray-50 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                <span>Upload a photo</span>
+                                <input id="image-upload" name="image" type="file" accept="image/*" class="sr-only">
+                            </label>
+                            <p class="pl-1">or paste URL</p>
+                        </div>
+                        <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                    </div>
+                </div>
             </div>
-            <div class="flex items-center justify-between">
-                <button type="submit"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Create Post
-                </button>
-            </div>
+
+            <button type="submit"
+                class="w-full bg-primary text-white px-4 py-2 rounded-md hover:bg-dark-primary transition duration-300">
+                Submit
+            </button>
         </form>
     </div>
 </body>

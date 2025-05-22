@@ -1,7 +1,8 @@
 <?php
-require_once 'includes/db.php'; 
+
 require_once '../vendor/autoload.php'; 
 
+use LH\DB;
 use LH\Models\Blog;
 use LH\Helpers\ConstantHelper;
 
@@ -50,7 +51,7 @@ for ($i = 1; $i <= $totalPages; $i++) {
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <?php foreach ($posts as $post): ?>
             <div class="bg-white shadow rounded overflow-hidden">
-                <img src="img/<?php echo htmlspecialchars($post['image']); ?>"
+                <img src="<?php echo htmlspecialchars($post['image']); ?>"
                     alt="<?php echo htmlspecialchars($post['title']); ?>" class="w-full h-48 object-cover">
                 <div class="p-4">
                     <h2 class="text-xl font-bold mb-2"><a
