@@ -205,84 +205,25 @@ $posts = $blogModel->getAllPosts(10,0);
     </div>
 
 
-    <!-- JavaScript for AJAX Deletion -->
-    <script>
-    function deletePost(id) {
-        if (confirm('Are you sure you want to delete this post?')) {
-            fetch(`delete-post.php?id=${id}`, {
-                    method: 'DELETE'
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById('post-row-' + id).remove();
-                        document.getElementById('post-card-' + id)?.remove();
-                        alert('Post deleted successfully.');
-                    } else {
-                        alert('Failed to delete post: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An unexpected error occurred.');
-                });
-        }
-    }
 
-    function openEditModal(postId) {
-        // Fetch post data via AJAX
-        fetch(`edit-post.php?id=${postId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const post = data.post;
-                    document.getElementById('edit-title').value = post.title;
-                    document.getElementById('edit-description').value = post.description;
-                    document.getElementById('post-id').value = postId;
-                    document.getElementById('edit-modal').classList.remove('hidden');
-                } else {
-                    alert('Failed to load post data.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An unexpected error occurred.');
-            });
-    }
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-80">
+            <h2 class="text-xl font-bold mb-4">Confirm Deletion</h2>
+            <p>Are you sure you want to delete this post?</p>
+            <div class="mt-4 flex justify-between">
+                <button onclick="closeConfirmModal()" class="bg-gray-300 px-4 py-2 rounded">Cancel</button>
+                <button onclick="deletePostWithConfirmation(<?php echo $post['id']; ?>)"
+                    class="bg-primary text-white px-4 py-2 rounded-md hover:bg-dark-primary transition duration-300">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
 
-    function closeEditModal() {
-        document.getElementById('edit-modal').classList.add('hidden');
-    }
+    <script src="../assets/js/dashboardScript.js"></script>
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const editForm = document.getElementById('edit-form');
-        editForm.addEventListener('submit', function(event) {
-            event.preventDefault();
 
-            const formData = new FormData(editForm);
-            const postId = formData.get('post_id');
-
-            fetch(`update-post.php`, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Post updated successfully.');
-                        document.getElementById('edit-modal').classList.add('hidden');
-                        location.reload();
-                    } else {
-                        alert('Failed to update post: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An unexpected error occurred.');
-                });
-        });
-    });
-    </script>
 </body>
 
 </html>
