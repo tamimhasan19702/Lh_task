@@ -15,9 +15,8 @@ use LH\Helpers\ImageHelper;
             }
             ?>
         </a>
-        <ul class="flex space-x-4">
-            <li><a href="/index.php" class="text-gray-600 hover:text-gray-800">Home</a></li>
-            <li><a href="/admin/login.php" class="text-gray-600 hover:text-gray-800">Admin</a></li>
-        </ul>
+        <a class="bg-primary text-white rounded-md px-4 py-2 font-montserrat hover:bg-primary transition duration-300">
+            Admin panel
+        </a>
     </div>
 </nav>

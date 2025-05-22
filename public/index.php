@@ -33,6 +33,7 @@ for ($i = 1; $i <= $totalPages; $i++) {
     <title>Blog List</title>
     <link href="./assets/css/output.css" rel="stylesheet">
     <link href="./assets/css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat :wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body class="bg-gray-100">
