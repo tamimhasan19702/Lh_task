@@ -1,6 +1,7 @@
 <!-- public/post.php -->
 <?php
-require_once '../includes/db.php';
+use LH\DB;
+
 $blogModel = new LH\Models\Blog();
 
 $postId = $_GET['id'];

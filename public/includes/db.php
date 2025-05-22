@@ -1,6 +1,6 @@
 <?php
 
-
+namespace LH\DB;
 
 define('ROOT_PATH', dirname(__DIR__, 2));
 

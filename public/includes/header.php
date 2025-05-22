@@ -7,7 +7,7 @@ use LH\Helpers\ImageHelper;
 
 <nav class="bg-white shadow">
     <div class="container mx-auto flex justify-between items-center px-6 py-4">
-        <a href="<?= BASE_URL ?>" class="text-xl font-bold text-gray-800">
+        <a href="<?= BASE_URL ?>index.php" class="text-xl font-bold text-gray-800">
             <?php
             $logoPath = ImageHelper::getImagePath('logo.png');
             if ($logoPath !== null) {
@@ -17,9 +17,11 @@ use LH\Helpers\ImageHelper;
             }
             ?>
         </a>
-        <a href="<?= BASE_URL ?>/admin/login.php"
+        <?php if (strpos($_SERVER['REQUEST_URI'], 'admin/login.php') === false) { ?>
+        <a href="<?= BASE_URL ?>admin/login.php"
             class="bg-primary text-white rounded-md px-4 py-2 font-montserrat hover:bg-primary transition duration-300">
             Admin panel
         </a>
+        <?php } ?>
     </div>
 </nav>
