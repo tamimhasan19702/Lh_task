@@ -1,0 +1,27 @@
+{
+  "name": "lh_task",
+  "version": "1.0.0",
+  "description": "An unstyled starter template for Tailwind CSS v3.0 with predefined file paths - a great boilerplate for starting a new Tailwind CSS project.",
+  "main": "tailwind.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "css": "npx tailwindcss -i ./public/assets/css/input.css -o ./public/assets/css/output.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tamimhasan19702/Lh_task.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/tamimhasan19702/Lh_task/issues"
+  },
+  "homepage": "https://github.com/tamimhasan19702/Lh_task#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^3.4.17"
+  }
+}

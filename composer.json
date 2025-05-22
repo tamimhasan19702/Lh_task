@@ -1,0 +1,16 @@
+{
+  "name": "pc/lh_task",
+  "autoload": {
+    "psr-4": {
+      "LH\\": "admin/",
+      "LH\\Helpers\\": "admin/helpers"
+    }
+  },
+  "authors": [
+    {
+      "name": "tamimhasan19702",
+      "email": "tamimhasancu@gmail.com"
+    }
+  ],
+  "require": {}
+}

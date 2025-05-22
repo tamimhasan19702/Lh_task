@@ -1,7 +1,10 @@
 <?php
-require_once 'includes/db.php'; // Updated path
+require_once 'includes/db.php'; 
+require_once '../vendor/autoload.php'; 
 
 use LH\Models\Blog;
+
+
 
 $blogModel = new Blog();
 
@@ -28,7 +31,8 @@ for ($i = 1; $i <= $totalPages; $i++) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog List</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss @2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="./assets/css/output.css" rel="stylesheet">
+    <link href="./assets/css/style.css" rel="stylesheet">
 </head>
 
 <body class="bg-gray-100">
