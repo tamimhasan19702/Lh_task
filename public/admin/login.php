@@ -1,5 +1,12 @@
-// public/admin/login.php
 <?php
+
+require '../../vendor/autoload.php';
+
+use LH\Helpers\ConstantHelper;
+use LH\Helpers\ImageHelper;
+
+ConstantHelper::initialize();
+
 session_start();
 
 if (isset($_POST['login'])) {
@@ -28,34 +35,62 @@ if (isset($_SESSION['authenticated'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss @2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="../assets/css/output.css" rel="stylesheet">
+    <link href="../assets/css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat :wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body class="bg-gray-100">
-    <div class="flex justify-center items-center h-screen">
-        <div class="w-full max-w-md">
-            <form action="" method="POST" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                <h1 class="text-center text-2xl font-bold mb-4">Login</h1>
-                <?php if (isset($error)): ?>
-                <p class="text-red-500 text-sm mb-4"><?php echo $error; ?></p>
-                <?php endif; ?>
-                <div class="mb-4">
-                    <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
-                    <input type="text" name="username" id="username"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+<body class="bg-gray-100 font-sans text-gray-800">
+    <?php include '../includes/header.php'; ?>
+
+    <div class="flex items-center justify-center h-screen">
+        <div class="max-w-sm w-full space-y-8">
+            <div class="text-center flex justify-center">
+                <a href="<?= BASE_URL ?>" class="text-xl font-bold text-gray-800">
+                    <?php
+            $logoPath = ImageHelper::getImagePath('logo.png');
+            if ($logoPath !== null) {
+                echo "<img src='$logoPath' alt='Logo'>";
+            } else {
+                echo "<span class='text-red-500'>Logo not found</span>";
+            }
+            ?>
+                </a>
+
+            </div>
+
+            <form action="" method="POST" class="mt-8 space-y-6">
+                <input type="hidden" name="csrf_token" value="your_csrf_token_here">
+
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700">
+                        Username
+                    </label>
+                    <div class="mt-1">
+                        <input id="username" name="username" type="text" required autofocus autocomplete="username"
+                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    </div>
                 </div>
-                <div class="mb-6">
-                    <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-                    <input type="password" name="password" id="password"
-                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">
+                        Password
+                    </label>
+                    <div class="mt-1">
+                        <input id="password" name="password" type="password" required
+                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                    </div>
                 </div>
-                <div class="flex items-center justify-between">
+
+                <div>
                     <button type="submit" name="login"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                        Login
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-700">
+                        Sign in
                     </button>
                 </div>
             </form>
+
+
         </div>
     </div>
 </body>

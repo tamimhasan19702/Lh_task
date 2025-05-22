@@ -1,4 +1,3 @@
-// public/admin/dashboard.php
 <?php
 session_start();
 

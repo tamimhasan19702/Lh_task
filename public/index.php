@@ -3,6 +3,9 @@ require_once 'includes/db.php';
 require_once '../vendor/autoload.php'; 
 
 use LH\Models\Blog;
+use LH\Helpers\ConstantHelper;
+
+ConstantHelper::initialize();
 
 
 
