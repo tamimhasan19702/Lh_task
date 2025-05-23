@@ -71,7 +71,7 @@ $posts = $blogModel->getAllPosts(10,0);
         <!-- Success Message -->
         <?php if (isset($_GET['success']) && $_GET['success'] === 'true'): ?>
         <div id="alert" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
-            <p>Post created successfully!</p>
+            <p><?php echo $_GET['message']; ?></p>
         </div>
         <script>
         setTimeout(function() {
@@ -79,6 +79,8 @@ $posts = $blogModel->getAllPosts(10,0);
         }, 2000);
         </script>
         <?php endif; ?>
+
+
 
         <!-- Responsive Blog List -->
         <div class="space-y-4 sm:hidden">
@@ -92,7 +94,7 @@ $posts = $blogModel->getAllPosts(10,0);
                         class="text-indigo-600 hover:text-indigo-900">
                         <i class="material-icons">edit</i>
                     </a>
-                    <a href="#" onclick="event.preventDefault(); deletePost(<?php echo $post['id']; ?>)"
+                    <a href="#" onclick="event.preventDefault(); openConfirmModal(<?php echo $post['id']; ?>)"
                         class="text-red-600 hover:text-red-900">
                         <i class="material-icons">delete</i>
                     </a>
@@ -138,7 +140,7 @@ $posts = $blogModel->getAllPosts(10,0);
                             </a>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap hidden-on-mobile" style="width: 3%;">
-                            <a href="#" onclick="event.preventDefault(); deletePost(<?= $post['id'] ?>);"
+                            <a href="#" onclick="event.preventDefault(); openConfirmModal(<?= $post['id'] ?>);"
                                 class="text-red-600 hover:text-red-900 ml-2">
                                 <i class="material-icons">delete</i>
                             </a>
@@ -151,7 +153,23 @@ $posts = $blogModel->getAllPosts(10,0);
     </div>
 
 
-    <!-- Edit Modal -->
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-80">
+            <h2 class="text-xl font-bold mb-4">Confirm Deletion</h2>
+            <p>Are you sure you want to delete this post?</p>
+            <div class="mt-4 flex justify-between">
+                <button onclick="closeConfirmModal()" class="bg-gray-300 px-4 py-2 rounded">Cancel</button>
+                <button type="button" onclick="deletePostConfirmed()"
+                    class="bg-primary text-white px-4 py-2 rounded-md hover:bg-dark-primary transition duration-300">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- editing modal -->
 
     <div id="edit-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white p-6 rounded-lg shadow-lg w-80">
@@ -165,27 +183,33 @@ $posts = $blogModel->getAllPosts(10,0);
             </div>
 
 
-            <form id="edit-form" method="POST" enctype="multipart/form-data">
+            <form id="edit-form" method="POST" action="update-post.php" enctype="multipart/form-data">
                 <input type="hidden" name="post_id" id="post-id">
+
                 <div class="mb-4">
                     <label for="edit-title" class="block text-sm font-medium text-gray-700">Title</label>
-                    <input type="text" id="edit-title" name="title" placeholder="Enter your title"
+                    <input type="text" id="edit-title" name="title"
                         class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                 </div>
+
                 <div class="mb-4">
                     <label for="edit-description" class="block text-sm font-medium text-gray-700">Description</label>
-                    <textarea id="edit-description" name="description" rows="4" placeholder="Enter your description"
+                    <textarea id="edit-description" name="description" rows="4"
                         class="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
                 </div>
+
                 <div class="mb-4">
-                    <label for="edit-image" class="block text-sm font-medium text-gray-700">Featured Image</label>
+                    <label class="block text-sm font-medium text-gray-700">Featured Image</label>
+                    <img src="<?= BASE_URL ?>/assets/images/uploads/<?= htmlspecialchars($post['image']) ?>"
+                        alt="Current image" class="w-full h-32 object-cover mb-4">
+
                     <div
                         class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                         <div class="space-y-1 text-center">
                             <span class="material-icons mx-auto h-15 w-15 text-primary">cloud_upload</span>
                             <div class="flex text-sm text-gray-600">
                                 <label for="edit-image-upload"
-                                    class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:bg-gray-50 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                    class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:bg-gray-50">
                                     <span>Upload a photo</span>
                                     <input id="edit-image-upload" name="image" type="file" accept="image/*"
                                         class="sr-only">
@@ -196,28 +220,12 @@ $posts = $blogModel->getAllPosts(10,0);
                         </div>
                     </div>
                 </div>
+
                 <button type="submit"
                     class="w-full bg-primary text-white px-4 py-2 rounded-md hover:bg-dark-primary transition duration-300">
                     Submit
                 </button>
             </form>
-        </div>
-    </div>
-
-
-
-    <!-- Confirmation Modal -->
-    <div id="confirm-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-lg shadow-lg w-80">
-            <h2 class="text-xl font-bold mb-4">Confirm Deletion</h2>
-            <p>Are you sure you want to delete this post?</p>
-            <div class="mt-4 flex justify-between">
-                <button onclick="closeConfirmModal()" class="bg-gray-300 px-4 py-2 rounded">Cancel</button>
-                <button onclick="deletePostWithConfirmation(<?php echo $post['id']; ?>)"
-                    class="bg-primary text-white px-4 py-2 rounded-md hover:bg-dark-primary transition duration-300">
-                    Delete
-                </button>
-            </div>
         </div>
     </div>
 

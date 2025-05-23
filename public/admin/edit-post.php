@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Check if user is authenticated
 if (!isset($_SESSION['authenticated'])) {
     http_response_code(403);
     echo json_encode(['success' => false, 'message' => 'Unauthorized']);
@@ -12,7 +11,6 @@ require_once '../../vendor/autoload.php';
 
 use LH\Models\Blog;
 
-// Get post ID from query parameter
 $id = $_GET['id'] ?? null;
 
 if (!$id || !is_numeric($id)) {

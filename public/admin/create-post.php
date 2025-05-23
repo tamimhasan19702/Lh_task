@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = $blogModel->createPost($title, $description, $fileName);
 
     if ($result) {
-        header('Location: dashboard.php?success=true');
+        header('Location: dashboard.php?success=true&message=' . urlencode('Post created successfully.'));
         exit;
     } else {
         die("Failed to save post.");
@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <span class="material-icons mx-auto h-15 w-15 text-primary">cloud_upload</span>
                         <div class="flex text-sm text-gray-600">
                             <label for="image-upload"
-                                class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:bg-gray-50 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                class="relative cursor-pointer  rounded-md font-medium text-indigo-600  focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
                                 <span>Upload a photo</span>
                                 <input id="image-upload" name="image" type="file" accept="image/*" class="sr-only">
                             </label>

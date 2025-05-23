@@ -10,8 +10,8 @@ session_start();
 
 // Check if the user is already authenticated
 if (isset($_SESSION['authenticated'])) {
-    // User is already logged in
-    $error = 'You are already logged in.';
+
+    header('Location: dashboard.php');
 } else {
     // Handle login submission
     if (isset($_POST['login'])) {

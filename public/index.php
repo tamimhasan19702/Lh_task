@@ -12,7 +12,7 @@ ConstantHelper::initialize();
 
 $blogModel = new Blog();
 
-$postsPerPage = 5;
+$postsPerPage = 9;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $postsPerPage;
 
@@ -51,7 +51,7 @@ for ($i = 1; $i <= $totalPages; $i++) {
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <?php foreach ($posts as $post): ?>
             <div class="bg-white shadow rounded overflow-hidden">
-                <img src="<?php echo htmlspecialchars($post['image']); ?>"
+                <img src="<?= BASE_URL . 'assets/images/uploads/' . htmlspecialchars($post['image']); ?>"
                     alt="<?php echo htmlspecialchars($post['title']); ?>" class="w-full h-48 object-cover">
                 <div class="p-4">
                     <h2 class="text-xl font-bold mb-2"><a
