@@ -1,6 +1,9 @@
 <?php
+ob_start();
+
 session_start();
 
+// Check authentication
 if (!isset($_SESSION['authenticated'])) {
     header('Location: login.php');
     exit;
@@ -10,6 +13,7 @@ require_once '../../vendor/autoload.php';
 
 use LH\Models\Blog;
 
+// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $postId = $_POST['post_id'] ?? null;
     $title = $_POST['title'] ?? '';
@@ -17,12 +21,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validate inputs
     if (!$postId || !is_numeric($postId)) {
-        header("Location: dashboard.php?success=false&message=Invalid+Post+ID");
+        header("Location: dashboard.php?success=false&message=Invalid+post+ID");
         exit;
     }
 
     if (empty($title) || empty($description)) {
-        header("Location: dashboard.php?success=false&message=Title+and+description+are+required");
+        header("Location: dashboard.php?success=false&message=Title+and+description+are+required.");
         exit;
     }
 
@@ -48,6 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         $blogModel = new Blog();
+
+        // Call your model's updatePost() method
         $result = $blogModel->updatePost((int)$postId, $title, $description, $image);
 
         if ($result) {
@@ -61,3 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     exit;
 }
+
+ob_end_flush();
+?>

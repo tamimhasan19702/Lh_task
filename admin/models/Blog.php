@@ -45,28 +45,27 @@ class Blog
         ]);
     }
 
-public function updatePost(int $id, string $title, string $description, ?string $image): bool
-{
-    if ($image !== null) {
-        $stmt = $this->pdo->prepare("
-            UPDATE blogs SET title = :title, description = :description, image = :image WHERE id = :id
-        ");
-        return $stmt->execute([
-            ':id' => $id,
-            ':title' => $title,
-            ':description' => $description,
-            ':image' => $image
-        ]);
-    } else {
-        $stmt = $this->pdo->prepare("
-            UPDATE blogs SET title = :title, description = :description WHERE id = :id
-        ");
-        return $stmt->execute([
-            ':id' => $id,
-            ':title' => $title,
-            ':description' => $description
-        ]);
+public function updatePost($id, $title, $description, $image = null) {
+    $sql = "UPDATE posts SET title = :title, description = :description";
+    
+    if ($image) {
+        $sql .= ", image = :image";
     }
+
+    $sql .= " WHERE id = :id";
+
+    $stmt = $this->db->prepare($sql);
+    $params = [
+        ':title' => $title,
+        ':description' => $description,
+        ':id' => $id
+    ];
+
+    if ($image) {
+        $params[':image'] = $image;
+    }
+
+    return $stmt->execute($params);
 }
 
     public function deletePost(int $id): bool
