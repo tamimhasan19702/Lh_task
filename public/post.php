@@ -1,8 +1,10 @@
-<!-- public/post.php -->
 <?php
-use LH\DB;
 
-$blogModel = new LH\Models\Blog();
+use LH\DB;
+use LH\Models\Blog;
+
+
+$blogModel = new Blogs();
 
 $postId = $_GET['id'];
 $post = $blogModel->getPostById($postId);

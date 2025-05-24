@@ -12,7 +12,7 @@ ConstantHelper::initialize();
 
 $blogModel = new Blog();
 
-$postsPerPage = 9;
+$postsPerPage = $blogModel->getPostsPerPage();
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $postsPerPage;
 
@@ -23,7 +23,7 @@ $paginationLinks = '';
 $totalPages = ceil($totalPosts / $postsPerPage);
 
 for ($i = 1; $i <= $totalPages; $i++) {
-    $active = ($i === $page) ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-blue-500 hover:text-white';
+    $active = ($i === $page) ? 'bg-white text-primary' : 'text-gray-600 hover:bg-primary hover:text-white';
     $paginationLinks .= "<a href='?page=$i' class='px-4 py-2 rounded $active'>$i</a>";
 }
 ?>
@@ -45,6 +45,7 @@ for ($i = 1; $i <= $totalPages; $i++) {
 
     <div class="container mx-auto px-6 py-8">
         <h1 class="text-2xl font-bold mb-4">Blog Posts</h1>
+
         <?php if (empty($posts)): ?>
         <p class="text-gray-600">No blog posts found.</p>
         <?php else: ?>
@@ -57,7 +58,13 @@ for ($i = 1; $i <= $totalPages; $i++) {
                     <h2 class="text-xl font-bold mb-2"><a
                             href="post.php?id=<?php echo $post['id']; ?>"><?php echo htmlspecialchars($post['title']); ?></a>
                     </h2>
-                    <p class="text-gray-700 line-clamp-3"><?php echo htmlspecialchars($post['description']); ?></p>
+                    <p class="text-gray-700 line-clamp-3">
+                        <?php
+                        $description = htmlspecialchars($post['description']);
+                        $limitedDescription = substr($description, 0, 50) . (strlen($description) > 50 ? '...' : '');
+                        echo $limitedDescription;
+                        ?>
+                    </p>
                     <a href="post.php?id=<?php echo $post['id']; ?>"
                         class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Read
                         More</a>

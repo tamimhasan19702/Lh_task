@@ -60,7 +60,7 @@ $posts = $blogModel->getAllPosts(10,0);
                     <i class="material-icons mr-2">add</i>
                     <span class="hidden sm:inline">Create new post</span>
                 </a>
-                <a href="<?= BASE_URL ?>/admin/settings.php"
+                <a href="<?= BASE_URL ?>admin/settings.php"
                     class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 transition duration-300 flex items-center">
                     <i class="material-icons mr-2">settings</i>
                     <span class="hidden sm:inline">Settings</span>

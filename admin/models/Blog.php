@@ -76,6 +76,47 @@ class Blog
         return $stmt->fetchColumn();
     }
 
+public function getPostsPerPage(): int
+{
+    $db = Database::getInstance();
+
+    // Check if any row exists
+    $stmt = $db->query("SELECT posts_per_page FROM settings LIMIT 1");
+    $result = $stmt->fetchColumn();
+
+    if ($result !== false) {
+        return (int)$result;
+    } else {
+        // If no row exists, insert default
+        $db->exec("INSERT INTO settings (posts_per_page) VALUES (9)");
+        return 9;
+    }
+}
+
+
+public function updatePostsPerPage(int $num): bool
+{
+    try {
+        $db = Database::getInstance();
+
+        // Ensure the row exists before update
+        $count = $db->query("SELECT COUNT(*) FROM settings")->fetchColumn();
+
+        if ($count == 0) {
+            $stmt = $db->prepare("INSERT INTO settings (posts_per_page) VALUES (:num)");
+        } else {
+            $stmt = $db->prepare("UPDATE settings SET posts_per_page = :num");
+        }
+
+        return $stmt->execute(['num' => $num]);
+
+    } catch (\PDOException $e) {
+        error_log("Database error: " . $e->getMessage());
+        return false;
+    }
+}
+
+
     public function deletePost(int $id): bool
     {
         $stmt = Database::getInstance()->prepare("DELETE FROM blogs WHERE id = :id");
