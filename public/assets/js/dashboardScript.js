@@ -45,29 +45,92 @@ function deletePostConfirmed() {
     });
 }
 
-function openEditModal(postId) {
-  currentPostId = postId;
-
-  fetch(`edit-post.php?id=${postId}`)
+function editPost(id) {
+  fetch(`edit-post.php?id=${id}`)
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        document.getElementById("post-id").value = data.post.id;
-        document.getElementById("edit-title").value = data.post.title;
-        document.getElementById("edit-description").value =
-          data.post.description;
+        const post = data.post;
+        document.getElementById("post-id").value = id;
+        document.getElementById("edit-title").value = post.title;
+        document.getElementById("edit-description").value = post.description;
 
         document.getElementById("edit-modal").classList.remove("hidden");
       } else {
-        alert("Failed to load post: " + data.message);
+        alert(data.message);
       }
     })
     .catch((error) => {
-      console.error("Error:", error);
-      alert("An unexpected error occurred.");
+      console.error("Error fetching post:", error);
     });
 }
 
 function closeEditModal() {
   document.getElementById("edit-modal").classList.add("hidden");
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const editForm = document.getElementById("edit-form");
+
+  if (editForm) {
+    editForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const formData = new FormData(this);
+
+      fetch("update-post.php", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.text();
+        })
+        .then((text) => {
+          try {
+            const data = JSON.parse(text);
+            if (data.success) {
+              closeEditModal();
+              location.reload();
+            } else {
+              alert("Failed to update post: " + data.message);
+            }
+          } catch (e) {
+            console.error("Invalid JSON:", text);
+            alert("Server returned invalid JSON. Check logs or backend.");
+          }
+        })
+        .catch((error) => {
+          console.error("AJAX Error:", error);
+          alert("An unexpected error occurred.");
+        });
+    });
+  }
+});
+
+document.getElementById("edit-form").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const formData = new FormData(form);
+
+  fetch("update-post.php", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        closeEditModal();
+        location.reload();
+      } else {
+        alert(data.message);
+      }
+    })
+    .catch((error) => {
+      console.error("Error updating post:", error);
+      alert("Something went wrong.");
+    });
+});

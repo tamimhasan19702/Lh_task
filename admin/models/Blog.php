@@ -45,28 +45,29 @@ class Blog
         ]);
     }
 
-public function updatePost($id, $title, $description, $image = null) {
-    $sql = "UPDATE posts SET title = :title, description = :description";
-    
-    if ($image) {
-        $sql .= ", image = :image";
+    public function updatePost(int $id, string $title, string $description, ?string $image = null): bool
+    {
+        $sql = "UPDATE blogs SET title = :title, description = :description";
+        
+        if ($image) {
+            $sql .= ", image = :image";
+        }
+
+        $sql .= " WHERE id = :id";
+
+        $stmt = Database::getInstance()->prepare($sql);
+        $params = [
+            ':title' => $title,
+            ':description' => $description,
+            ':id' => $id
+        ];
+
+        if ($image) {
+            $params[':image'] = $image;
+        }
+
+        return $stmt->execute($params);
     }
-
-    $sql .= " WHERE id = :id";
-
-    $stmt = $this->db->prepare($sql);
-    $params = [
-        ':title' => $title,
-        ':description' => $description,
-        ':id' => $id
-    ];
-
-    if ($image) {
-        $params[':image'] = $image;
-    }
-
-    return $stmt->execute($params);
-}
 
     public function deletePost(int $id): bool
     {

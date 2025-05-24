@@ -90,7 +90,7 @@ $posts = $blogModel->getAllPosts(10,0);
                 <p class="text-sm text-gray-600 mt-2 line-clamp-2"><?php echo htmlspecialchars($post['description']); ?>
                 </p>
                 <div class="mt-4 flex justify-between">
-                    <a href="#" onclick="event.preventDefault(); openEditModal(<?php echo $post['id']; ?>);"
+                    <a href="javascript:void(0);" onclick="editPost(<?= $post['id'] ?>)"
                         class="text-indigo-600 hover:text-indigo-900">
                         <i class="material-icons">edit</i>
                     </a>
@@ -134,7 +134,7 @@ $posts = $blogModel->getAllPosts(10,0);
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap hidden-on-mobile" style="width: 3%;">
-                            <a href="#" onclick="event.preventDefault(); openEditModal(<?php echo $post['id']; ?>);"
+                            <a href="javascript:void(0);" onclick="editPost(<?= $post['id'] ?>)"
                                 class="text-indigo-600 hover:text-indigo-900">
                                 <i class="material-icons">edit</i>
                             </a>
@@ -169,8 +169,9 @@ $posts = $blogModel->getAllPosts(10,0);
         </div>
     </div>
 
-    <!-- editing modal -->
 
+
+    <!-- Edit Modal -->
     <div id="edit-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white p-6 rounded-lg shadow-lg w-80">
 
@@ -178,12 +179,10 @@ $posts = $blogModel->getAllPosts(10,0);
                 <h2 class="text-xl font-bold mb-4">Edit Post</h2>
                 <a href="#" onClick="closeEditModal()" class="text-gray-600 hover:text-gray-800 flex items-center">
                     <i class="material-icons mr-2">close</i>
-
                 </a>
             </div>
 
-
-            <form id="edit-form" method="POST" action="update-post.php" enctype="multipart/form-data">
+            <form id="edit-form" enctype="multipart/form-data">
                 <input type="hidden" name="post_id" id="post-id">
 
                 <div class="mb-4">
@@ -200,8 +199,7 @@ $posts = $blogModel->getAllPosts(10,0);
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700">Featured Image</label>
-                    <img src="<?= BASE_URL ?>/assets/images/uploads/<?= htmlspecialchars($post['image']) ?>"
-                        alt="Current image" class="w-full h-32 object-cover mb-4">
+                    <img id="imagePreview" src="" alt="Current image" class="w-full h-32 object-cover mb-4 hidden">
 
                     <div
                         class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
