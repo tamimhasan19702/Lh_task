@@ -9,8 +9,6 @@ A simple blog admin panel built with PHP, Tailwind CSS, and MySQL.
 ## 📌 Features
 
 ![Login Page](https://github.com/tamimhasan19702/Lh_task/blob/main/public/assets/images/preview_2.png)
-![Admin Panel](https://github.com/tamimhasan19702/Lh_task/blob/main/public/assets/images/preview_3.png)
-![create post](https://github.com/tamimhasan19702/Lh_task/blob/main/public/assets/images/preview_4.png)
 
 ✅ Create, edit, and delete blog posts  
 ✅ Upload featured images  
@@ -98,3 +96,8 @@ Visit post.php?id=1 to see individual post.
 - Material Icons - UI icons
 
 ## preview
+
+![Admin Panel](https://github.com/tamimhasan19702/Lh_task/blob/main/public/assets/images/preview_3.png)
+![create post](https://github.com/tamimhasan19702/Lh_task/blob/main/public/assets/images/preview_4.png)
+![edit post](https://github.com/tamimhasan19702/Lh_task/blob/main/public/assets/images/preview_5.png)
+![single post](https://github.com/tamimhasan19702/Lh_task/blob/main/public/assets/images/preview_6.png)
