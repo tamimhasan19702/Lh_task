@@ -57,7 +57,7 @@ function editPost(id) {
 
         document.getElementById("edit-modal").classList.remove("hidden");
       } else {
-        alert(data.message);
+        showJsonSuccessAlert(data.message);
       }
     })
     .catch((error) => {
@@ -93,7 +93,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = JSON.parse(text);
             if (data.success) {
               closeEditModal();
-              location.reload();
+              showJsonSuccessAlert(data.message);
+              setTimeout(() => {
+                location.reload();
+              }, 3200);
             } else {
               alert("Failed to update post: " + data.message);
             }

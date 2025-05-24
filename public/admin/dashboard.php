@@ -76,10 +76,29 @@ $posts = $blogModel->getAllPosts(10,0);
         <script>
         setTimeout(function() {
             document.getElementById("alert").style.display = "none";
-        }, 2000);
+        }, 3000);
         </script>
         <?php endif; ?>
 
+
+        <div id="json-success-alert" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 hidden"
+            role="alert">
+            <p id="json-success-message"></p>
+        </div>
+
+        <script>
+        function showJsonSuccessAlert(message) {
+            const alertBox = document.getElementById("json-success-alert");
+            const alertText = document.getElementById("json-success-message");
+
+            alertText.textContent = message;
+            alertBox.classList.remove("hidden");
+
+            setTimeout(() => {
+                alertBox.classList.add("hidden");
+            }, 3000);
+        }
+        </script>
 
 
         <!-- Responsive Blog List -->

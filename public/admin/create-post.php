@@ -95,6 +95,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Featured Image</label>
+
+                <img id="new-image-preview" src="" alt="New image preview"
+                    class="w-32 h-32 object-cover mb-4 rounded hidden">
+
                 <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                     <div class="space-y-1 text-center">
                         <span class="material-icons mx-auto h-15 w-15 text-primary">cloud_upload</span>
@@ -110,6 +114,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
             </div>
+
+            <script>
+            const newImagePreview = document.getElementById("new-image-preview");
+            const editImageInput = document.getElementById("image-upload");
+            editImageInput.addEventListener("change", function() {
+                const file = editImageInput.files[0];
+                if (file) {
+                    const filename = file.name;
+                    const reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        newImagePreview.src = e.target.result;
+                        newImagePreview.classList.remove("hidden");
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+            });
+            </script>
 
             <button type="submit"
                 class="w-full bg-primary text-white px-4 py-2 rounded-md hover:bg-dark-primary transition duration-300">
