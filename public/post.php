@@ -63,10 +63,10 @@ if (!$post) {
         <div class="max-w-4xl mx-auto overflow-hidden">
 
             <!-- Post Content -->
-            <div class="p-6 text-justify">
-                <h1 class="text-3xl font-bold text-gray-900"><?= htmlspecialchars($post['title']) ?></h1>
-                <p>Published on: <?= $post['created_at'] ?></p>
-                <div class="mt-4 text-lg text-gray-700 whitespace-pre-line">
+            <div class="p-6 ">
+                <h1 class="text-3xl font-bold text-gray-900 text-left"><?= htmlspecialchars($post['title']) ?></h1>
+                <p class="text-sm text-gray-600 mt-2">Published on: <?= $post['created_at'] ?></p>
+                <div class="mt-4 text-lg text-gray-700 whitespace-pre-line text-justify">
                     <?= nl2br(htmlspecialchars($post['description'])) ?>
                 </div>
             </div>
