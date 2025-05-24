@@ -69,6 +69,13 @@ class Blog
         return $stmt->execute($params);
     }
 
+    public function getPostImage(int $id): ?string
+    {
+        $stmt = Database::getInstance()->prepare("SELECT image FROM blogs WHERE id = :id");
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetchColumn();
+    }
+
     public function deletePost(int $id): bool
     {
         $stmt = Database::getInstance()->prepare("DELETE FROM blogs WHERE id = :id");

@@ -110,27 +110,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-document.getElementById("edit-form").addEventListener("submit", function (e) {
-  e.preventDefault();
+document.getElementById("image").addEventListener("change", function (event) {
+  const file = event.target.files[0];
+  const preview = document.getElementById("imagePreview");
 
-  const form = e.target;
-  const formData = new FormData(form);
+  if (file) {
+    const reader = new FileReader();
 
-  fetch("update-post.php", {
-    method: "POST",
-    body: formData,
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        closeEditModal();
-        location.reload();
-      } else {
-        alert(data.message);
-      }
-    })
-    .catch((error) => {
-      console.error("Error updating post:", error);
-      alert("Something went wrong.");
-    });
+    reader.onload = function (e) {
+      preview.src = e.target.result;
+    };
+
+    reader.readAsDataURL(file);
+  } else {
+    preview.src = "";
+  }
 });

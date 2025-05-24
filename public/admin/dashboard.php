@@ -71,7 +71,7 @@ $posts = $blogModel->getAllPosts(10,0);
         <!-- Success Message -->
         <?php if (isset($_GET['success']) && $_GET['success'] === 'true'): ?>
         <div id="alert" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
-            <p><?php echo $_GET['message']; ?></p>
+            <p><?php echo htmlspecialchars($_GET['message']); ?></p>
         </div>
         <script>
         setTimeout(function() {
@@ -199,7 +199,12 @@ $posts = $blogModel->getAllPosts(10,0);
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700">Featured Image</label>
-                    <img id="imagePreview" src="" alt="Current image" class="w-full h-32 object-cover mb-4 hidden">
+                    <img id="current-image"
+                        src="<?= BASE_URL . 'assets/images/uploads/' . htmlspecialchars($post['image']) ?>"
+                        alt="Current image" class="w-full h-32 object-cover mb-4 rounded">
+
+                    <img id="new-image-preview" src="" alt="New image preview"
+                        class="w-full h-32 object-cover mb-4 rounded hidden">
 
                     <div
                         class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
@@ -212,7 +217,6 @@ $posts = $blogModel->getAllPosts(10,0);
                                     <input id="edit-image-upload" name="image" type="file" accept="image/*"
                                         class="sr-only">
                                 </label>
-                                <p class="pl-1">or paste URL</p>
                             </div>
                             <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
                         </div>
@@ -226,6 +230,28 @@ $posts = $blogModel->getAllPosts(10,0);
             </form>
         </div>
     </div>
+
+    <script>
+    const editImageInput = document.getElementById("edit-image-upload");
+    const newImagePreview = document.getElementById("new-image-preview");
+    const currentImage = document.getElementById("current-image");
+
+    editImageInput.addEventListener("change", function() {
+        const file = editImageInput.files[0];
+        if (file) {
+            const filename = file.name;
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                newImagePreview.src = e.target.result;
+                newImagePreview.classList.remove("hidden");
+                currentImage.classList.add("hidden");
+            };
+
+            reader.readAsDataURL(file);
+        }
+    });
+    </script>
 
     <script src="../assets/js/dashboardScript.js"></script>
 

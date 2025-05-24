@@ -64,13 +64,26 @@ try {
     $blogModel = new Blog();
     $result = $blogModel->updatePost((int)$postId, $title, $description, $image);
 
-    ob_end_clean();
-
     if ($result) {
-        echo json_encode(['success' => true, 'message' => 'Post updated successfully']);
+        // Get the current image filename after update
+        $currentImage = $blogModel->getPostImage((int)$postId);
+
+        ob_end_clean();
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Post updated successfully',
+            'image' => $currentImage ? htmlspecialchars($currentImage) : null
+        ]);
+
+        
+
     } else {
         throw new \Exception('Failed to update post.');
     }
+
+   
+
 } catch (\Exception $e) {
     ob_end_clean();
     http_response_code(500);
