@@ -76,7 +76,11 @@ CREATE TABLE settings (
 4. **Update your database credentials in utils/Database.php.**
 
 🚀 Usage
-Login to the admin panel admin/login.php [use: username: lemon; password: lemon]
+Login to the admin panel admin/login.php
+
+```json
+{username: lemon; password: lemon}
+```
 
 Go to Dashboard admin/dashboard.php to:
 
