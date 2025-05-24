@@ -22,10 +22,14 @@ $totalPosts = $blogModel->getTotalPosts(); // Use total posts for pagination
 $paginationLinks = '';
 $totalPages = ceil($totalPosts / $postsPerPage);
 
+$paginationLinks .= "<div class='flex justify-center space-x-[5px]'>";
+$paginationLinks .= "<a href='?page=" . max(1, $page - 1) . "' class='px-4 py-2 rounded text-gray-600 hover:bg-primary hover:text-white'><i class='material-icons'>arrow_back</i></a>";
 for ($i = 1; $i <= $totalPages; $i++) {
-    $active = ($i === $page) ? 'bg-white text-primary' : 'text-gray-600 hover:bg-primary hover:text-white';
+    $active = ($i === $page) ? 'bg-primary text-white' : 'text-gray-600 hover:bg-primary hover:text-white';
     $paginationLinks .= "<a href='?page=$i' class='px-4 py-2 rounded $active'>$i</a>";
 }
+$paginationLinks .= "<a href='?page=" . min($totalPages, $page + 1) . "' class='px-4 py-2 rounded text-gray-600 hover:bg-primary hover:text-white'><i class='material-icons'>arrow_forward</i></a>";
+$paginationLinks .= "</div>";
 ?>
 
 <!DOCTYPE html>
@@ -37,7 +41,8 @@ for ($i = 1; $i <= $totalPages; $i++) {
     <title>Blog List</title>
     <link href="./assets/css/output.css" rel="stylesheet">
     <link href="./assets/css/style.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat :wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="./assets/css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons " rel="stylesheet">
 </head>
 
 <body class="bg-gray-100">
