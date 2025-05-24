@@ -1,39 +1,100 @@
-# Tailwind Boilerplate
-An unstyled starter template for Tailwind CSS v3.0 with predefined file paths - a great boilerplate for starting a new Tailwind CSS project.
+<!-- @format -->
 
-### Preview
+# Lemon Hive Blog - PHP Intern Task
 
-![Preview](https://raw.githubusercontent.com/abrahamebij/images/main/tailwind-boilerplate.webp)
+![Home Page](https://github.com/tamimhasan19702/Lh_task/blob/main/public/assets/images/preview_1.png)
 
-### How To Use
+A simple blog admin panel built with PHP, Tailwind CSS, and MySQL.
 
-Download the zip file [here](https://github.com/abrahamebij/tailwind-boilerplate/archive/master.zip), and extract it or simply just fork it.
+## 📌 Features
 
- Open up your terminal and run these commands.
+![Login Page](https://github.com/tamimhasan19702/Lh_task/blob/main/public/assets/images/preview_2.png)
+![Admin Panel](https://github.com/tamimhasan19702/Lh_task/blob/main/public/assets/images/preview_3.png)
+![create post](https://github.com/tamimhasan19702/Lh_task/blob/main/public/assets/images/preview_4.png)
+
+✅ Create, edit, and delete blog posts  
+✅ Upload featured images  
+✅ Responsive design (mobile + desktop views)  
+✅ AJAX-based editing and deletion  
+✅ Settings page to configure "posts per page"  
+✅ Flash messages for success/failure feedback
+
+## 📁 Folder Structure
+
 ```
- cd '<Project Folder>'
+├── admin/
+│   ├── dashboard.php
+│   ├── create-post.php
+│   ├── edit-post.php
+│   ├── update-post.php
+│   └── settings.php
+├── public/
+│   └── post.php # Public view of a single post
+├── assets/
+│   ├── css/ # Tailwind and custom styles
+│   └── js/ # JavaScript for dashboard interactivity
+├── models/
+│   └── Blog.php # Blog model with DB logic
+├── helpers/
+│   └── ConstantHelper.php
+├── utils/
+│   └── Database.php # Singleton database connection
+├── includes/
+│   └── header.php # Reusable header template
+└── vendor/ # Composer dependencies
 ```
+
+## ⚙️ How to Run
+
+### 1. Clone the Project
+
+```bash
+git clone https://github.com/tamimhasan19702/Lh_task.git
+cd Lh_task
 ```
- npm install
+
+2. **Install Dependencies**
+
+   Make sure you have Composer installed:
+
+3. **Setup Database**
+
+```bash
+CREATE TABLE blogs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255),
+    description TEXT,
+    image VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE settings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    posts_per_page INT DEFAULT 9
+);
+
 ```
-```
- npm run css
-```
 
-And you are good to go.
+4. **Update your database credentials in utils/Database.php.**
 
-### Features
+🚀 Usage
+Login to the admin panel admin/login.php [use: username: lemon; password: lemon]
 
-* Good looking Footer
-* Responsive starter template ready to customize and publish
-* Responsive navbar with hamburger menu
-* Custom Scrollbar for Safari, Chrome and Opera
-* **tailwind.config.js** file included for easy customization
+Go to Dashboard admin/dashboard.php to:
 
-### Demo
+- View all blog posts
+- Create, edit or delete posts
+- Change settings like posts per page
 
-You can view the live demo at https://abrahamebij.github.io/tailwind-boilerplate/
+View public blog post:
+Visit post.php?id=1 to see individual post.
 
+## Technologies Used
 
-### Error Handling
-If at any point you come across some errors, probably while trying to edit something in the **tailwind.config.js** file, you should head over to your terminal and type `npm run css` again or type `npx tailwindcss -i ./src/input.css -o ./public/css/output.css --minify --watch` depending on your choice.
+- PHP - Backend logic and database interaction
+- Tailwind CSS - Utility-first styling
+- JavaScript - Modal handling and AJAX updates
+- MySQL - Store blog data
+- Material Icons - UI icons
+
+## preview
