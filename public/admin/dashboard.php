@@ -80,7 +80,7 @@ $posts = $blogModel->getAllPosts(10,0);
         </script>
         <?php endif; ?>
 
-
+        <!-- json success message -->
         <div id="json-success-alert" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 hidden"
             role="alert">
             <p id="json-success-message"></p>
